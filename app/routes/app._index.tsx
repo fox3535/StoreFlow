@@ -197,14 +197,14 @@ export default function Dashboard() {
                     <Button
                       fullWidth
                       textAlign="left"
-                      onClick={() => navigate("/app/purchase-orders")}
+                      onClick={() => navigate("/app/purchase-orders/new")}
                     >
                       Create Purchase Order
                     </Button>
                     <Button
                       fullWidth
                       textAlign="left"
-                      onClick={() => navigate("/app/offers")}
+                      onClick={() => navigate("/app/offers/new")}
                     >
                       Create Offer / Reserve
                     </Button>

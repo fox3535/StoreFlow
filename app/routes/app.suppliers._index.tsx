@@ -33,6 +33,7 @@ export default function SuppliersIndex() {
         key={id}
         selected={selectedResources.includes(id)}
         position={index}
+        onClick={() => navigate(`/app/suppliers/${id}`)}
       >
         <IndexTable.Cell>
           <Text as="span" variant="bodyMd" fontWeight="semibold">

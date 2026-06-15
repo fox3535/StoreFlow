@@ -41,6 +41,7 @@ export default function OffersIndex() {
         key={id}
         selected={selectedResources.includes(id)}
         position={index}
+        onClick={() => navigate(`/app/offers/${id}`)}
       >
         <IndexTable.Cell>
           <Text as="span" variant="bodyMd" fontWeight="semibold">
