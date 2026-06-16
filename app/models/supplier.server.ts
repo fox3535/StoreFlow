@@ -18,7 +18,17 @@ export async function getSuppliers(shop: string) {
 export async function getSupplier(shop: string, id: string) {
   return prisma.supplier.findFirst({
     where: { shop, id },
-    include: { skuMappings: true },
+    include: {
+      skuMappings: { orderBy: { createdAt: "desc" } },
+      purchaseOrders: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true, poNumber: true, status: true,
+          totalLandedCost: true, createdAt: true,
+          _count: { select: { lineItems: true } },
+        },
+      },
+    },
   });
 }
 

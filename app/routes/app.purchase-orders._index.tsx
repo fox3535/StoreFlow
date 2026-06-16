@@ -316,12 +316,20 @@ export default function PurchaseOrdersIndex() {
 
       <BlockStack gap="500">
         {/* ── Summary cards ─────────────────────────────────────────────── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-          <StatCard label="Total POs"          value={enriched.length} />
-          <StatCard label="Active Orders"      value={activeCount}   tone={activeCount > 0 ? "info" : undefined} />
-          <StatCard label="Pending Receipts"   value={pendingCount}  tone={pendingCount > 0 ? "warning" : undefined} sub={pendingCount > 0 ? "Awaiting stock" : undefined} />
-          <StatCard label="Total Landed Value" value={`$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
-        </div>
+        {(() => {
+          const activePOs   = enriched.filter((p) => ["open", "in_transit"].includes(p.status));
+          const activeValue = activePOs.reduce((s, p) => s + p.totalLandedCost, 0);
+          const unitsOnOrder = activePOs.reduce((s, p) => s + Math.max(0, p.totalOrdered - p.totalReceived), 0);
+          const avgValue    = enriched.length > 0 ? totalValue / enriched.length : 0;
+          return (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+              <StatCard label="Total POs" value={enriched.length} sub={`${enriched.filter(p => p.status === "draft").length} draft`} />
+              <StatCard label="Active Value on Order" value={`$${activeValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} sub="Open + In Transit" tone={activeValue > 0 ? "info" : undefined} />
+              <StatCard label="Units On Order" value={unitsOnOrder.toLocaleString()} sub="Outstanding qty" tone={unitsOnOrder > 0 ? "info" : undefined} />
+              <StatCard label="Avg PO Landed Cost" value={`$${avgValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} sub="Per order" />
+            </div>
+          );
+        })()}
 
         {/* ── Table card ────────────────────────────────────────────────── */}
         <Card padding="0">
